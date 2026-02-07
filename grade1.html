@@ -157,7 +157,7 @@
 </div>
 
 <script>
-    // הקישור לסקריפט שלך
+    // הקישור המעודכן לסקריפט שלך
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-Fz0IXDafL1Mc5VcSccd7CMt5fI-O-9og9MhuXoEykrlXOASl_XRw-p_eakELuyE8XQ/exec";
 
     const questions = [
@@ -197,38 +197,33 @@
         }
 
         let score = 0;
-        let answers = [];
+        let answersData = [];
         questions.forEach((q, i) => {
             const sel = document.querySelector(`input[name="q${i}"]:checked`);
             const val = sel ? sel.value : "לֹא נֶעֱנָה";
             if(val === q.a) score += 10;
-            answers.push({q: q.q, a: val});
+            answersData.push(val);
         });
 
         const btn = document.getElementById('submitBtn');
         btn.innerText = "שׁוֹלֵחַ...";
         btn.disabled = true;
 
-        // בניית גוף הבקשה כ-FormData - זה הפתרון שעובד מול גוגל ב-no-cors
-        const formData = new FormData();
-        formData.append('studentName', name + " (" + cls + ")");
-        formData.append('score', score);
-        formData.append('answers', JSON.stringify(answers));
+        // בניית הפרמטרים לשליחה בשיטה שתואמת ל-doGet ב-code.gs
+        const params = new URLSearchParams({
+            studentName: name,
+            studentClass: cls,
+            score: score,
+            answers: answersData.join(" | "),
+            timestamp: new Date().toLocaleString('he-IL')
+        });
 
-        // שימוש ב-URLSearchParams הופך את ה-FormData לפורמט טקסטואלי שגוגל מעכל הכי טוב
-        const params = new URLSearchParams(formData);
-
-        fetch(SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors', // קריטי לסביבה הזו
-            cache: 'no-cache',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: params.toString()
+        fetch(`${SCRIPT_URL}?${params.toString()}`, {
+            method: 'GET',
+            mode: 'no-cors',
+            cache: 'no-cache'
         })
         .then(() => {
-            // ב-no-cors אנחנו תמיד מניחים הצלחה אם הגענו לכאן
             document.getElementById('quiz').style.display = 'none';
             document.getElementById('results').style.display = 'block';
             document.getElementById('score').innerText = score;
