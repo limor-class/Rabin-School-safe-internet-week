@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>מְשִׂימַת הַעֲרָכָה - אִינְטֶרְנֶט בָּטוּחַ - כִּתּוֹת אַחֲרָיוּת</title>
+    <style>
+        :root {
+            --primary: #6a1b9a;
+            --secondary: #f3e5f5;
+            --accent: #ffd600;
+            --bg: #fce4ec;
+            --text: #2c3e50;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            background: white;
+            padding: 25px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            border: 5px solid #fff;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            background: linear-gradient(135deg, #ce93d8, #f06292);
+            padding: 20px;
+            border-radius: 20px;
+            color: white;
+        }
+
+        h1 { margin: 0; font-size: 28px; text-shadow: 1px 1px 2px rgba(0,0,0,0.1); }
+        p { font-size: 20px; font-weight: bold; margin-top: 5px; }
+
+        .input-area {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            background: var(--secondary);
+            padding: 20px;
+            border-radius: 15px;
+            flex-wrap: wrap;
+        }
+
+        .input-group { flex: 1; min-width: 200px; }
+
+        label { display: block; font-weight: bold; margin-bottom: 8px; font-size: 20px; color: var(--primary); }
+        
+        input[type="text"], select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ce93d8;
+            border-radius: 10px;
+            font-size: 18px;
+            box-sizing: border-box;
+            outline: none;
+        }
+
+        .question-card {
+            background: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            border: 2px solid #f0f0f0;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.03);
+        }
+
+        .question-text { font-weight: bold; font-size: 22px; color: #4a148c; margin-bottom: 15px; display: block; }
+
+        .option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 2px solid #f3e5f5;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 18px;
+            background-color: #fafafa;
+            transition: all 0.2s;
+        }
+
+        .option:hover { background: #fce4ec; border-color: #f06292; }
+        input[type="radio"] { width: 22px; height: 22px; accent-color: #f06292; cursor: pointer; }
+
+        button {
+            background: linear-gradient(135deg, #4caf50, #81c784);
+            color: white;
+            border: none;
+            padding: 18px;
+            font-size: 24px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 5px 0 #388e3c;
+            transition: all 0.2s;
+            margin-top: 10px;
+        }
+
+        button:active { transform: translateY(3px); box-shadow: 0 2px 0 #388e3c; }
+        
+        #results { display: none; text-align: center; padding: 40px; }
+        .score-display { font-size: 40px; color: #2e7d32; font-weight: bold; margin: 20px 0; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>מְשִׂימַת הַעֲרָכָה: אִינְטֶרְנֶט בָּטוּחַ 🔑</h1>
+        <p>כִּתּוֹת א' - אַחֲרָיוּת</p>
+    </header>
+
+    <div id="quiz">
+        <div class="input-area">
+            <div class="input-group">
+                <label>שֵׁם מָלֵא ✍️</label>
+                <input type="text" id="name" placeholder="הַשֵּׁם שֶׁלָּכֶם...">
+            </div>
+            <div class="input-group">
+                <label>כִּתָּה 🏫</label>
+                <select id="class">
+                    <option value="">בְּחַרוּ כִּתָּה...</option>
+                    <option value="אחריות 1">אַחֲרָיוּת 1</option>
+                    <option value="אחריות 2">אַחֲרָיוּת 2</option>
+                    <option value="אחריות 3">אַחֲרָיוּת 3</option>
+                </select>
+            </div>
+        </div>
+
+        <div id="questions"></div>
+        <button id="submitBtn" onclick="submit()">סִיַּמְתִּי! שִׁלְחוּ לַמּוֹרָה 🚀</button>
+    </div>
+
+    <div id="results">
+        <h2>כָּל הַכָּבוֹד! 🎉</h2>
+        <div class="score-display">הַצִּיּוּן שֶׁלָּכֶם: <span id="score">0</span></div>
+        <p style="font-size: 22px;">מְשִׂימַת הַהַעֲרָכָה הֻגְּשָׁה בְּהַצְלָחָה.</p>
+        <button onclick="location.reload()" style="background: #1976d2; margin-top: 20px;">לְשַׂחֵק שׁוּב 🔄</button>
+    </div>
+</div>
+
+<script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx-Fz0IXDafL1Mc5VcSccd7CMt5fI-O-9og9MhuXoEykrlXOASl_XRw-p_eakELuyE8XQ/exec";
+
+    const questions = [
+        { 
+            q: "אִם מִישֶׁהוּ שֶׁאַתֶּם לֹא מַכִּירִים כּוֹתֵב לָכֶם בַּמַּחְשֵׁב 💻, מָה תַּעֲשׂוּ?", 
+            options: ["תְּסַפְּרוּ מִיָּד לְאַבָּא אוֹ לְאִמָּא 👨‍👩‍👧", "תַּעֲנוּ לוֹ וְתִהְיוּ חֲבֵרִים שֶׁלוֹ 🤝", "תִּתְּנוּ לוֹ אֶת הַכְּתֹבֶת שֶׁלָּכֶם 🏠", "כָּל הַתְּשׁוּבוֹת לֹא נְכוֹנוֹת ❌"], 
+            a: "תְּסַפְּרוּ מִיָּד לְאַבָּא אוֹ לְאִמָּא 👨‍👩‍👧" 
+        },
+        { 
+            q: "הַאִם מֻתָּר לְגַלּוֹת אֶת הַסִּיסְמָה 🔑 שֶׁלָּכֶם לַחֲבֵרִים?", 
+            options: ["לֹא, סִיסְמָה הִיא סוֹד כְּמוֹ מַפְתֵּחַ אִישִׁי 🤫", "כֵּן, כִּי הֵם חֲבֵרִים טוֹבִים 🎈", "כֵּן, כְּדי שֶׁיּוּכְלוּ לְשַׂחֵק בִּמְקוֹמְכֶם 🎮", "כָּל הַתְּשׁוּבוֹת נְכוֹנוֹת ✅"], 
+            a: "לֹא, סִיסְמָה הִיא סוֹד כְּמוֹ מַפְתֵּחַ אִישִׁי 🤫" 
+        },
+        { 
+            q: "רְאִיתֶם סִרְטוֹן שֶׁמַּפְחִיד אֶתְכֶם 😰, מָה הֲכִי נָכוֹן לַעֲשׂוֹת?", 
+            options: ["תִּסְגְּרוּ אֶת הַמָּסָך 🖥️", "תִּקְרְאוּ מִיָּד לִמְבֻגָּר 📢", "תְּסַפְּרוּ לַחֲבֵרִים בַּכִּתָּה 🏫", "תְּשׁוּבוֹת א' וּ-ב' נְכוֹנוֹת 🌟"], 
+            a: "תְּשׁוּבוֹת א' וּ-ב' נְכוֹנוֹת 🌟" 
+        },
+        { 
+            q: "מִישֶׁהוּ מְבַקֵּשׁ מִכֶּם תְּמוּנָה שֶׁלָּכֶם 📸, מָה תַּעֲשׂוּ כְּדי לִשְׁמֹר עַל עַצְמְכֶם?", 
+            options: ["תִּזְכְּרוּ שֶׁתְּמוּנָה נִשְׁאָרֶת לָנֶצַח בָּרֶשֶׁת ♾️", "תְּסָרְבוּ לִשְׁלֹחַ לְמִישֶׁהוּ שֶׁאַתֶּם לֹא מַכִּירִים 🛑", "תְּבַקְּשׁוּ רְשׁוּת מֵהַהוֹרִים לִפְנֵי כָּל שִׁלּוּחַ 👨‍👩‍👧", "כָּל הַתְּשׁוּבוֹת נְכוֹנוֹת ✅"], 
+            a: "כָּל הַתְּשׁוּבוֹת נְכוֹנוֹת ✅" 
+        },
+        { 
+            q: "שִׂחַקְתֶּם בְּמִשְׂחָק וּלְפֶתַע קָפְצָה הוֹדָעָה הַמַּבְטִיחָה מַתָּנָה 🎁, הַאִם תִּלְחֲצוּ?", 
+            options: ["לֹא, זֶה יָכוֹל לִהְיוֹת מְסֻכָּן וְלֹא אֲמִתִּי ❌", "כֵּן, אֲנִי רוֹצֶה מַתָּנָה חִנָּם! 🧸", "תִּלְחֲצוּ כְּדי לִרְאוֹת מָה זֶה 🍭", "תְּסַפְּרוּ לַחֲבֵרִים שֶׁגַּם הֵם יְנַסּוּ 📱"], 
+            a: "לֹא, זֶה יָכוֹל לִהְיוֹת מְסֻכָּן וְלֹא אֲמִתִּי ❌" 
+        },
+        { 
+            q: "מִישֶׁהוּ מְבַקֵּשׁ לָדַעַת אֵיפֹה אַתֶּם גָּרִים 🏠, מָה תַּעֲשׂוּ?", 
+            options: ["תִּתְעַלְּמוּ וּתְסַפְּרוּ לְאִמָּא אוֹ לְאַבָּא 👨‍👩‍👧", "תַּעֲנוּ לוֹ בְּנִימוּס 😊", "תִּשְׁאֲלוּ אוֹתוֹ אֵיפֹה הוּא גָּר 🗺️", "תִּשְׁלְחוּ לוֹ מִקּוּם 📍"], 
+            a: "תִּתְעַלְּמוּ וּתְסַפְּרוּ לְאִמָּא אוֹ לְאַבָּא 👨‍👩‍👧" 
+        },
+        { 
+            q: "חָבֵר שָׁלַח סִרְטוֹן מַעֲלִיב עַל יֶלֶד אַחֵר 📱, מָה תַּעֲשׂוּ?", 
+            options: ["לֹא תַּעֲבִירוּ וּתְסַפְּרוּ לַמּוֹרָה 👩‍🏫", "תִּצְחֲקוּ וְתִשְׁלְחוּ לְעוֹד חֲבֵרִים 😂", "תִּכְתְּבוּ מַשֶּׁהוּ מַעֲלִיב גַּם ✍️", "תִּתְעַלְּמוּ כְּאִלּוּ לֹא רְאִיתֶם 🤐"], 
+            a: "לֹא תַּעֲבִירוּ וּתְסַפְּרוּ לַמּוֹרָה 👩‍🏫" 
+        },
+        { 
+            q: "הַאִם מֻתָּר לְהוֹרִיד מִשְׂחָק חָדָשׁ לְבַד?", 
+            options: ["רַק אַחֲרֵי שֶׁשּׁוֹאֲלִים אֶת הַהוֹרִים ✅", "כֵּן, אִם זֶה בְּחִנָּם 🆓", "כֵּן, אִם כָּל הַחֲבֵרִים הוֹרִידוּ 👦", "כֵּן, אִם זֶה נִרְאֶה כֵּיף 🎮"], 
+            a: "רַק אַחֲרֵי שֶׁשּׁוֹאֲלִים אֶת הַהוֹרִים ✅" 
+        },
+        { 
+            q: "מִישֶׁהוּ שֶׁהִכַּרְתֶּם בְּמִשְׂחָק מְבַקֵּשׁ לְהִפָּגֵשׁ 🤝, מָה תַּעֲשׂוּ?", 
+            options: ["תְּסַפְּרוּ מִיָּד לִמְבֻגָּר שֶׁאַתֶּם סוֹמְכִים עָלָיו 📢", "תֵּלְכוּ לִרְאוֹת מִי זֶה 🏃", "תֵּלְכוּ רַק אִם עוֹד חָבֵר בָּא 👦", "תִּקְבְּעוּ אִיתוֹ בַּגִּנָּה 🌳"], 
+            a: "תְּסַפְּרוּ מִיָּד לִמְבֻגָּר שֶׁאַתֶּם סוֹמְכִים עָלָיו 📢" 
+        },
+        { 
+            q: "אֵיךְ נִרְאֵית גְּלִישָׁה מְכַבֶּדֶת בִּקְבוּצַת הַכִּתָּה?", 
+            options: ["כּוֹתְבִים רַק דְּבָרִים נְעִימִים וְטוֹבִים ✨", "כּוֹתְבִים בְּצַעֲקוֹת ‼️", "עוֹזְבִים בְּלִי לְהַגִּיד כְּלוּם 🏃", "כּוֹתְבִים מָה שֶׁרוֹצִים 📱"], 
+            a: "כּוֹתְבִים רַק דְּבָרִים נְעִימִים וְטוֹבִים ✨" 
+        }
+    ];
+
+    function init() {
+        const cont = document.getElementById('questions');
+        cont.innerHTML = "";
+        questions.forEach((q, i) => {
+            let html = `<div class="question-card"><span class="question-text">${i+1}. ${q.q}</span>`;
+            q.options.forEach(opt => {
+                html += `<label class="option"><input type="radio" name="q${i}" value="${opt}"> ${opt}</label>`;
+            });
+            html += `</div>`;
+            cont.innerHTML += html;
+        });
+    }
+
+    function submit() {
+        const name = document.getElementById('name').value.trim();
+        const cls = document.getElementById('class').value;
+        if(!name || !cls) return alert("נָא לְמַלֵּא שֵׁם מָלֵא וְכִתָּה 😊");
+
+        let score = 0;
+        let answers = [];
+        questions.forEach((q, i) => {
+            const sel = document.querySelector(`input[name="q${i}"]:checked`);
+            const val = sel ? sel.value : "לֹא נֶעֱנָה";
+            if(val === q.a) score += 10;
+            answers.push({q: q.q, a: val});
+        });
+
+        const btn = document.getElementById('submitBtn');
+        btn.innerText = "שׁוֹלֵחַ...";
+        btn.disabled = true;
+
+        const payload = JSON.stringify({
+            studentName: name + " (כיתה " + cls + " - אחריות)",
+            score: score,
+            answers: JSON.stringify(answers)
+        });
+
+        fetch(SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {'Content-Type': 'text/plain'},
+            body: payload
+        }).then(() => {
+            document.getElementById('quiz').style.display = 'none';
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('score').innerText = score;
+        }).catch(err => {
+            alert("שְׁגִיאָה בַּשְּׁלִיחָה. נָא לְנַסּוֹת שׁוּב.");
+            btn.disabled = false;
+            btn.innerText = "סִיַּמְתִּי! שִׁלְחוּ לַמּוֹרָה 🚀";
+        });
+    }
+    init();
+</script>
+</body>
+</html>
